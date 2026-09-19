@@ -1,0 +1,27 @@
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e',
+  fullyParallel: true,
+  retries: 1,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:5173',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+  ],
+  webServer: [
+    {
+      command: 'npm run dev:server',
+      url: 'http://localhost:3001/api/v1/health',
+      reuseExistingServer: true,
+    },
+    {
+      command: 'npm run dev:client',
+      url: 'http://localhost:5173',
+      reuseExistingServer: true,
+    },
+  ],
+});
