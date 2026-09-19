@@ -7,6 +7,7 @@ RUN npm run build
 
 FROM node:20-slim AS server-build
 WORKDIR /app/server
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY server/package.json server/package-lock.json* ./
 COPY server/prisma ./prisma/
 RUN npm install
