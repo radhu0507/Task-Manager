@@ -27,4 +27,4 @@ RUN mkdir -p /app/server/uploads
 WORKDIR /app/server
 ENV PORT=3001
 EXPOSE 3001
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
+CMD ["sh", "-c", "echo '== running prisma migrate =='; ./node_modules/.bin/prisma migrate deploy; echo \"migrate exit=$?\"; echo '== starting node =='; ls -la dist; exec node dist/index.js"]
