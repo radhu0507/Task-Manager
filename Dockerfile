@@ -1,11 +1,11 @@
-FROM node:20-alpine AS client-build
+FROM node:20-slim AS client-build
 WORKDIR /app/client
 COPY client/package.json client/package-lock.json* ./
 RUN npm install
 COPY client/ .
 RUN npm run build
 
-FROM node:20-alpine AS server-build
+FROM node:20-slim AS server-build
 WORKDIR /app/server
 COPY server/package.json server/package-lock.json* ./
 COPY server/prisma ./prisma/
@@ -14,8 +14,9 @@ COPY server/ .
 RUN npx prisma generate
 RUN npm run build
 
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY --from=client-build /app/client/dist ./client/dist
 COPY --from=server-build /app/server/node_modules ./server/node_modules
 COPY --from=server-build /app/server/dist ./server/dist
