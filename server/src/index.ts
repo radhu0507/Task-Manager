@@ -4,13 +4,6 @@ import { config } from './config';
 import { initRealtime } from './services/realtime';
 import { ensureUploadDir } from './utils/fs';
 
-console.log(`Node ${process.version} starting server...`);
-
-process.on('uncaughtException', (err: Error) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1);
-});
-
 ensureUploadDir();
 
 const httpServer = createServer(app);

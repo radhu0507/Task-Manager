@@ -27,4 +27,7 @@ RUN mkdir -p /app/server/uploads
 WORKDIR /app/server
 ENV PORT=3001
 EXPOSE 3001
-CMD ["sh", "-c", "echo '== running prisma migrate =='; ./node_modules/.bin/prisma migrate deploy; echo \"migrate exit=$?\"; echo '== starting node =='; ls -la dist; exec node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && exec node dist/index.js"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:'+(process.env.PORT||3001)+'/api/v1/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
